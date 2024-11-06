@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import Episode from "./Components/Episode";
+import Episode from "./Episode";
 
 function SelectedShowContainer(props) {
-  const selectedSeason = useState(1);
+
+  const [selectedSeason, setSelectedSeason] = useState(1);
 
   function mapSeasons() {
-    if (!!props.episodes) {
-      let seasons = props.episodes.map((e) => e.season).unique();
+    if (!!props.allEpisodes) {
+      let seasons = props.allEpisodes.map((e) => e.season).unique();
 
       return seasons.map((s) => {
         return (
@@ -19,7 +20,7 @@ function SelectedShowContainer(props) {
   }
 
   function mapEpisodes() {
-    return props.episodes.map((e) => {
+    return props.allEpisodes.map((e) => {
       if (e.season == selectedSeason) {
         return <Episode eachEpisode={e} key={e.id} />;
       }
@@ -27,28 +28,42 @@ function SelectedShowContainer(props) {
   }
 
   function handleSelectionChange(e) {
-    selectedSeason = e.target.value;
+    setSelectedSeason(e.target.value)
   }
 
   const { selectedShow } = props;
 
   return (
     <div style={{ position: "static" }}>
-      <h2>{selectedShow.name}</h2>
-      <img src={selectedShow.image.medium} alt="" />
-      <p dangerouslySetInnerHTML={{ __html: selectedShow.summary }}></p>
-      <p>Premiered: {selectedShow.premiered}</p>
-      <p>Status: {selectedShow.status}</p>
-      <p>Average Rating: {selectedShow.rating.average}</p>
-      <select style={{ display: "block" }} onChange={handleSelectionChange}>
+      <h2>{props.selectedShow.name}</h2>
+      <img src={props.selectedShow.image.medium} alt="" />
+      <p dangerouslySetInnerHTML={{ __html: props.selectedShow.summary }}></p>
+      <p>Premiered: {props.selectedShow.premiered}</p>
+      <p>Status: {props.selectedShow.status}</p>
+      <p>Average Rating: {props.selectedShow.rating.average}</p>
+      <select style={{ display: "block" }} value={selectedSeason} onChange={handleSelectionChange}>
         {mapSeasons()}
       </select>
       {mapEpisodes()}
     </div>
   );
+
+  // return (
+  //   <div style={{ position: "static" }}>
+  //     <h2>{props.selectedShow.name}</h2>
+  //     <img src={props.selectedShow.image.medium} alt="" />
+  //     <p dangerouslySetInnerHTML={{ __html: props.selectedShow.summary }}></p>
+  //     <p>Premiered: {props.selectedShow.premiered}</p>
+  //     <p>Status: {props.selectedShow.status}</p>
+  //     <p>Average Rating: {props.selectedShow.rating.average}</p>
+
+  //   </div>
+  // );
 }
 
-export SelectedShowContainer;
+
+
+
 
 Array.prototype.unique = function () {
   const arr = [];
@@ -59,3 +74,5 @@ Array.prototype.unique = function () {
   }
   return arr;
 };
+
+export default SelectedShowContainer
